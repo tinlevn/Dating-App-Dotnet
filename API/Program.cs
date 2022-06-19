@@ -1,5 +1,11 @@
+using System.Text;
 using API.Data;
+using API.Extensions;
+using API.Interfaces;
+using API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,11 +17,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 
-builder.Services.AddDbContext<DataContext>(options =>
-{
-    //Colon to get into the next level of json {} wrapping connstring=>defaultconn
-    options.UseSqlite(builder.Configuration["ConnectionStrings:DefaultConnection"]);
-});
+
+builder.Services.AddIdentityServices(builder.Configuration);
+builder.Services.AddApplicationServices(builder.Configuration);
 
 var app = builder.Build();
 
@@ -32,6 +36,7 @@ app.UseRouting();
 
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"));
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

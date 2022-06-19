@@ -1,4 +1,7 @@
 .vscode
+.angular
+*.zip
 obj
 bin
 API/appsettings.json
+StudentAssets
